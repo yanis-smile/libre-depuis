@@ -1,0 +1,16 @@
+{
+  "name": "Libre depuis",
+  "short_name": "Libre depuis",
+  "description": "Comptez le temps depuis l’arrêt d’une addiction et suivez les bienfaits, étape par étape.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EDF1EE",
+  "theme_color": "#1D5C47",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
