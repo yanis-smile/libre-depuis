@@ -384,12 +384,25 @@
     }
   }
 
+  function storedUser() {
+    const saved = readJSON('libre-depuis-auth');
+    return saved && saved.refresh_token && saved.user ? saved.user : null;
+  }
+
   async function init() {
     if (!configured) { state.phase = 'setup'; render(); return; }
     if (!sb) { state.phase = 'unavailable'; render(); return; }
-    let session = null;
-    try { ({ data: { session } } = await sb.auth.getSession()); } catch (_) {}
-    setUser(session ? session.user : null);
+    let session = null, failed = false;
+    try {
+      const { data, error } = await sb.auth.getSession();
+      session = data ? data.session : null;
+      failed = Boolean(error);
+    } catch (_) { failed = true; }
+    // Opening the app without network makes the token refresh fail: that is not a sign-out,
+    // so keep the last signed-in person; the session refreshes once the network is back.
+    const keep = !session && (failed || !navigator.onLine) ? storedUser() : null;
+    setUser(session ? session.user : keep);
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
     sb.auth.onAuthStateChange((_event, next) => {
       const user = next ? next.user : null;
       // Defer: the auth callback must not wait on other Supabase calls.
